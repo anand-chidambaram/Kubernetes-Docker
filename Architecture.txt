@@ -28,3 +28,10 @@ Replica sET
 
 Basically copies  , copies , replica manifest file 
 
+
+A simple example
+
+
+NodePort = Door from outside world into cluster
+Service  = Traffic manager/load balancer inside cluster
+Pod      = Actual application
