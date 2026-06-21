@@ -1,0 +1,4 @@
+docker build -t image_name . -> to build the image.
+
+
+kind load docker-image calculate-2.0 -> to load the image 
