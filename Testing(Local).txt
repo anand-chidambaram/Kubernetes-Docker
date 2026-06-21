@@ -1,0 +1,218 @@
+Last login: Fri Jun 19 15:30:04 on ttys000
+anand.c@Anand-Chidambaram-FT4K6K2WH5 ~ % kubectl apply -f Documents/Learning/Kubernetes/pod.yml
+The Pod "my-Pod" is invalid: metadata.name: Invalid value: "my-Pod": a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character (e.g. 'example.com', regex used for validation is '[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*')
+anand.c@Anand-Chidambaram-FT4K6K2WH5 ~ % kubectl apply -f Documents/Learning/Kubernetes/pod.yml
+pod/my-pod created
+anand.c@Anand-Chidambaram-FT4K6K2WH5 ~ % kubectl get pods
+NAME     READY   STATUS         RESTARTS   AGE
+my-pod   0/1     ErrImagePull   0          40s
+anand.c@Anand-Chidambaram-FT4K6K2WH5 ~ % docker images | grep calculator-new
+calculator-new                                           latest        b1b43ba86cee   53 minutes ago   1.1GB
+anand.c@Anand-Chidambaram-FT4K6K2WH5 ~ % kind load docker-image calculator-new
+Image: "calculator-new" with ID "sha256:b1b43ba86ceeca38661858e5a34c75adc3815d5d309a183e4fb237681737e9ad" not yet present on node "kind-control-plane", loading...
+^C
+anand.c@Anand-Chidambaram-FT4K6K2WH5 ~ % kubectl apply -f Documents/Learning/Kubernetes/pod.yml
+
+pod/my-pod unchanged
+anand.c@Anand-Chidambaram-FT4K6K2WH5 ~ % kubectl get pods
+NAME     READY   STATUS             RESTARTS   AGE
+my-pod   0/1     ImagePullBackOff   0          3m18s
+anand.c@Anand-Chidambaram-FT4K6K2WH5 ~ % kubectl delete pod my-pod
+pod "my-pod" deleted
+anand.c@Anand-Chidambaram-FT4K6K2WH5 ~ % kubectl apply -f pod.yaml
+error: the path "pod.yaml" does not exist
+anand.c@Anand-Chidambaram-FT4K6K2WH5 ~ % kubectl apply -f Documents/Learning/Kubernetes/pod.yml
+pod/my-pod created
+anand.c@Anand-Chidambaram-FT4K6K2WH5 ~ % kubect get pods
+zsh: command not found: kubect
+anand.c@Anand-Chidambaram-FT4K6K2WH5 ~ % kubectl get pods
+NAME     READY   STATUS              RESTARTS   AGE
+my-pod   0/1     ErrImageNeverPull   0          16s
+anand.c@Anand-Chidambaram-FT4K6K2WH5 ~ % docker exec -it kind-control-plane ctr -n=k8s.io images ls | grep calculator
+anand.c@Anand-Chidambaram-FT4K6K2WH5 ~ % kind load docker-image calculator-new
+Image: "calculator-new" with ID "sha256:b1b43ba86ceeca38661858e5a34c75adc3815d5d309a183e4fb237681737e9ad" not yet present on node "kind-control-plane", loading...
+anand.c@Anand-Chidambaram-FT4K6K2WH5 ~ % kind load docker-image calculator-new --name kind
+Image: "calculator-new" with ID "sha256:b1b43ba86ceeca38661858e5a34c75adc3815d5d309a183e4fb237681737e9ad" found to be already present on all nodes.
+anand.c@Anand-Chidambaram-FT4K6K2WH5 ~ % kubectl describe pod my-pod
+Name:             my-pod
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             kind-control-plane/192.168.117.2
+Start Time:       Sun, 21 Jun 2026 00:28:24 +0530
+Labels:           project=calculator
+Annotations:      <none>
+Status:           Running
+IP:               10.244.0.6
+IPs:
+  IP:  10.244.0.6
+Containers:
+  simply-byte-calculator:
+    Container ID:   containerd://3d5524784214743d304b5945674170757a17801c25284092de030a46a041c0f9
+    Image:          calculator-new
+    Image ID:       docker.io/library/import-2026-06-20@sha256:86792d93b88a49476b854391157a30692b521b4d5776af76856fe51337fe9f16
+    Port:           5000/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Sun, 21 Jun 2026 00:29:59 +0530
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-h46nq (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       True 
+  ContainersReady             True 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-h46nq:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason             Age                 From               Message
+  ----     ------             ----                ----               -------
+  Normal   Scheduled          119s                default-scheduler  Successfully assigned default/my-pod to kind-control-plane
+  Warning  ErrImageNeverPull  40s (x8 over 118s)  kubelet            Container image "calculator-new" is not present with pull policy of Never
+  Warning  Failed             40s (x8 over 118s)  kubelet            Error: ErrImageNeverPull
+  Normal   Pulled             25s                 kubelet            Container image "calculator-new" already present on machine and can be accessed by the pod
+  Normal   Created            25s                 kubelet            Container created
+  Normal   Started            24s                 kubelet            Container started
+anand.c@Anand-Chidambaram-FT4K6K2WH5 ~ % kubectl get pods
+NAME     READY   STATUS    RESTARTS   AGE
+my-pod   1/1     Running   0          2m25s
+anand.c@Anand-Chidambaram-FT4K6K2WH5 ~ % kubectl desc pod my-pod 
+error: unknown command "desc" for "kubectl"
+
+Did you mean this?
+	describe
+anand.c@Anand-Chidambaram-FT4K6K2WH5 ~ % kubectl describe pod my-pod
+Name:             my-pod
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             kind-control-plane/192.168.117.2
+Start Time:       Sun, 21 Jun 2026 00:28:24 +0530
+Labels:           project=calculator
+Annotations:      <none>
+Status:           Running
+IP:               10.244.0.6
+IPs:
+  IP:  10.244.0.6
+Containers:
+  simply-byte-calculator:
+    Container ID:   containerd://3d5524784214743d304b5945674170757a17801c25284092de030a46a041c0f9
+    Image:          calculator-new
+    Image ID:       docker.io/library/import-2026-06-20@sha256:86792d93b88a49476b854391157a30692b521b4d5776af76856fe51337fe9f16
+    Port:           5000/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Sun, 21 Jun 2026 00:29:59 +0530
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-h46nq (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       True 
+  ContainersReady             True 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-h46nq:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason             Age                 From               Message
+  ----     ------             ----                ----               -------
+  Normal   Scheduled          4m1s                default-scheduler  Successfully assigned default/my-pod to kind-control-plane
+  Warning  ErrImageNeverPull  2m42s (x8 over 4m)  kubelet            Container image "calculator-new" is not present with pull policy of Never
+  Warning  Failed             2m42s (x8 over 4m)  kubelet            Error: ErrImageNeverPull
+  Normal   Pulled             2m27s               kubelet            Container image "calculator-new" already present on machine and can be accessed by the pod
+  Normal   Created            2m27s               kubelet            Container created
+  Normal   Started            2m26s               kubelet            Container started
+anand.c@Anand-Chidambaram-FT4K6K2WH5 ~ % kubectl apply -f Documents/Learning/Kubernetes/manifest.yml
+error: error validating "Documents/Learning/Kubernetes/manifest.yml": error validating data: apiVersion not set; if you choose to ignore these errors, turn validation off with --validate=false
+anand.c@Anand-Chidambaram-FT4K6K2WH5 ~ %  kubectl apply -f Documents/Learning/Kubernetes/manifest.yml
+error: error validating "Documents/Learning/Kubernetes/manifest.yml": error validating data: apiVersion not set; if you choose to ignore these errors, turn validation off with --validate=false
+anand.c@Anand-Chidambaram-FT4K6K2WH5 ~ %  kubectl apply -f Documents/Learning/Kubernetes/manifest.yml
+Error from server (BadRequest): error when creating "Documents/Learning/Kubernetes/manifest.yml": ReplicaSet in version "v1" cannot be handled as a ReplicaSet: strict decoding error: unknown field "spec.selector.template"
+anand.c@Anand-Chidambaram-FT4K6K2WH5 ~ %  kubectl apply -f Documents/Learning/Kubernetes/manifest.yml
+replicaset.apps/calculator created
+anand.c@Anand-Chidambaram-FT4K6K2WH5 ~ % kubectl get r
+error: the server doesn't have a resource type "r"
+anand.c@Anand-Chidambaram-FT4K6K2WH5 ~ % kubectl get rs
+NAME         DESIRED   CURRENT   READY   AGE
+calculator   3         3         3       17s
+anand.c@Anand-Chidambaram-FT4K6K2WH5 ~ % kubectl get pods
+NAME               READY   STATUS    RESTARTS   AGE
+calculator-8p6d5   1/1     Running   0          31s
+calculator-bw72w   1/1     Running   0          31s
+my-pod             1/1     Running   0          22m
+anand.c@Anand-Chidambaram-FT4K6K2WH5 ~ % kubectl delete my-pod
+error: the server doesn't have a resource type "my-pod"
+anand.c@Anand-Chidambaram-FT4K6K2WH5 ~ % kubectl delete pod my-pod
+pod "my-pod" deleted
+^C%                                                                                                                                                                                                                                                                                                 anand.c@Anand-Chidambaram-FT4K6K2WH5 ~ % kubectl get pods         
+NAME               READY   STATUS        RESTARTS   AGE
+calculator-8p6d5   1/1     Running       0          91s
+calculator-bw72w   1/1     Running       0          91s
+calculator-xrp65   1/1     Running       0          15s
+my-pod             1/1     Terminating   0          23m
+anand.c@Anand-Chidambaram-FT4K6K2WH5 ~ % kubectl delete pod my-pod
+pod "my-pod" deleted
+anand.c@Anand-Chidambaram-FT4K6K2WH5 ~ % kubectl get pods         
+NAME               READY   STATUS    RESTARTS   AGE
+calculator-8p6d5   1/1     Running   0          117s
+calculator-bw72w   1/1     Running   0          117s
+calculator-xrp65   1/1     Running   0          41s
+anand.c@Anand-Chidambaram-FT4K6K2WH5 ~ % kubectl delete pod calculator-8p6d5
+pod "calculator-8p6d5" deleted
+anand.c@Anand-Chidambaram-FT4K6K2WH5 ~ % kubectl get pods
+NAME               READY   STATUS    RESTARTS   AGE
+calculator-bw72w   1/1     Running   0          3m18s
+calculator-d898j   1/1     Running   0          58s
+calculator-xrp65   1/1     Running   0          2m2s
+anand.c@Anand-Chidambaram-FT4K6K2WH5 ~ % kubectl get nodes
+NAME                 STATUS   ROLES           AGE   VERSION
+kind-control-plane   Ready    control-plane   3h    v1.36.1
+anand.c@Anand-Chidambaram-FT4K6K2WH5 ~ % kubectl get pods
+NAME               READY   STATUS    RESTARTS   AGE
+calculator-bw72w   1/1     Running   0          95m
+calculator-d898j   1/1     Running   0          93m
+calculator-xrp65   1/1     Running   0          94m
+anand.c@Anand-Chidambaram-FT4K6K2WH5 ~ % kubectl get pods -A
+NAMESPACE            NAME                                         READY   STATUS    RESTARTS   AGE
+default              calculator-bw72w                             1/1     Running   0          95m
+default              calculator-d898j                             1/1     Running   0          93m
+default              calculator-xrp65                             1/1     Running   0          94m
+kube-system          coredns-589f44dc88-4l79l                     1/1     Running   0          3h2m
+kube-system          coredns-589f44dc88-5wdjc                     1/1     Running   0          3h2m
+kube-system          etcd-kind-control-plane                      1/1     Running   0          3h2m
+kube-system          kindnet-x52r6                                1/1     Running   0          3h2m
+kube-system          kube-apiserver-kind-control-plane            1/1     Running   0          3h2m
+kube-system          kube-controller-manager-kind-control-plane   1/1     Running   0          3h2m
+kube-system          kube-proxy-22ld6                             1/1     Running   0          3h2m
+kube-system          kube-scheduler-kind-control-plane            1/1     Running   0          3h2m
+local-path-storage   local-path-provisioner-855c7b7774-p2hzc      1/1     Running   0          3h2m
+anand.c@Anand-Chidambaram-FT4K6K2WH5 ~ % 
+  [Restored 21 Jun 2026 at 10:33:05 AM]
+Last login: Sun Jun 21 10:33:05 on ttys000
