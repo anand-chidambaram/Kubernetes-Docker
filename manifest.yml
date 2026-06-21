@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+
+kind: ReplicaSet
+
+metadata:
+  name: calculator
+  labels:
+    app: calculator
+
+spec:
+  replicas: 3
+
+  selector:
+    matchLabels:
+      project: calculator
+
+  template:
+    metadata:
+      labels:
+        project: calculator
+
+    spec:
+      containers:
+        - name: calculator
+          image: calculator-new
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5000

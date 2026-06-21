@@ -1,0 +1,30 @@
+
+
+
+Master Node
+
+Api server -> It will tell what to do for others
+Controll Manager -> It will maintain the state of the containers (desire_state  - actual state)
+ETCD -> It will give the us the desire state value
+
+Scheduler -> It will in which  worker node containers should be created
+
+
+
+
+
+Worker Node
+
+In worker node only containers will be created
+
+Worker A 
+
+
+kublet will actually tell the container runtime with the image 
+
+
+
+Replica sET 
+
+Basically copies  , copies , replica manifest file 
+
