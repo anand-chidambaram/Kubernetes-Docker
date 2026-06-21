@@ -34,4 +34,16 @@ A simple example
 
 NodePort = Door from outside world into cluster
 Service  = Traffic manager/load balancer inside cluster
-Pod      = Actual application
+Pod      = Actual application 
+
+
+
+Browser
+   |
+localhost:8080
+   |
+kubectl port-forward
+   |
+Service:80
+   |
+Pod:5000
