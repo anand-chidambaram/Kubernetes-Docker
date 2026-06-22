@@ -4,6 +4,8 @@ const path = require('path');
 
 const PORT = 5000;
 
+const page_title = process.env.PAGE_TITLE || "Default Title";
+
 http.createServer((req, res) => {
   const filePath = path.join(__dirname, 'calculator.html');
 

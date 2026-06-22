@@ -1,0 +1,8 @@
+
+
+apiVersion : v1
+kind : ConfigMap
+metadata : 
+  name : "calculator"
+data : 
+ PAGE_TITLE : Title from ConfigMap
